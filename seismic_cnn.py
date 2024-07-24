@@ -22,15 +22,11 @@ from scipy.signal import resample,hilbert
 
 
 ############################# USER INPUT #############################
-
-# set CNN data paths
-
-# path to image dataset
-dir = '/Users/Siddharth/Desktop/IIITB/bashok_srip/STEAD_dataset/images/training_spectrograms'
-
+# path to training image dataset
+dir = 'path_to_training'
 # path to stead dataset
-data_dir = '/Users/Siddharth/Desktop/IIITB/bashok_srip/STEAD_dataset'
-
+data_dir = 'path_to_stead'
+#####################################################################
 
 # paths to csv and hdf5 (waveform/signal) files
 noise_csv_path = data_dir+'/chunk1.csv'
@@ -65,9 +61,6 @@ eq5_list = earthquakes_5['trace_name'].to_list()
 
 # making a list of trace names for the noise set
 noise_list = noise['trace_name'].to_list()
-
-
-##############################################################################################################################################
 
 
 class SeismicCNN():
@@ -191,17 +184,9 @@ class SeismicCNN():
         else:
             print('Error: please choose either "classification" or "regression" for CNN model type')
 
-    #####################################################################################################################################################################################################################
 
     def train_test_split(self,test_size,random_state):
             self.train_images, self.test_images, self.train_labels, self.test_labels = train_test_split(self.imgs,self.labels,random_state=random_state,test_size=test_size)
-
-            # test_image_filenames = [os.path.basename(path) for path in self.test_images]
-
-            # # Optionally, save to a file
-            # with open('test_image_filenames.txt', 'w') as f:
-            #     for filename in test_image_filenames:
-            #         f.write(f"{filename}\n")
 
             print(f'The training images set is size: {self.train_images.shape}')
             print(f'The training labels set is size: {self.train_labels.shape}')
@@ -218,8 +203,6 @@ class SeismicCNN():
             print('Resizing images')
             self.train_images = self.train_images.reshape(-1,img_height,img_width,1) # reshape to input into CNN which requires a 4-tensor
             self.test_images = self.test_images.reshape(-1,img_height,img_width,1) # reshape to input into CNN which requires a 4-tensor
-
-    ####################################################################################################################################################################################
 
     def classification_cnn(self,epochs):
             self.epochs = epochs
@@ -255,29 +238,7 @@ class SeismicCNN():
             model.save(saved_model_path)
 
             self.model = model
-            #-------------------------------------------------------------------------------
-            # output_file = 'predicted_trace_categories.txt'
-            # loaded_model = keras.models.load_model(saved_model_path)
-    
-            # # Make predictions on the test dataset
-            # predicted_probs = loaded_model.predict(self.test_images)
-            
-            # # Convert probabilities to class labels
-            # predicted_classes = np.argmax(predicted_probs, axis=-1)
-            
-            # # Store the predicted trace categories in a text file
-            # with open(output_file, 'w') as f:
-            #     for image_name, label in zip(self.test_images, predicted_classes):
-            #         if label == 1:
-            #             f.write(f"{image_name}: earthquake signal\n")
-            #         else:
-            #             f.write(f"{image_name}: noise\n")         
-            
-            # print(f"Predicted trace categories have been saved to {output_file}")
-            #  #-------------------------------------------------------------------------------
-
-    ########################################################################################################################################################################################################################
-
+        
     def regression_cnn(self,target,epochs):
             self.epochs = epochs
             callbacks = [
@@ -308,54 +269,7 @@ class SeismicCNN():
             model.save(saved_model_path)
 
             self.model = model
-            #---------------------------------------------------------------------------
-            # if(target == "source_magnitude"):
-            #     # Load the model
-            #     output_file = 'predicted_magnitudes.txt'
-            #     loaded_model = keras.models.load_model(saved_model_path)
-
-            #     # Make predictions on the test dataset
-            #     predictions = loaded_model.predict(self.test_images)
-
-            #     # Save the predictions to a text file
-            #     with open(output_file, 'w') as f:
-            #         for image_name, pred in zip(self.test_images, predictions):
-            #             f.write(f"{image_name}: Predicted Magnitude: {pred[0]}\n")      
-                
-            #     print(f"Predicted magnitudes have been saved to {output_file}")
-            
-            # if(target == 'p_arrival_sample'):
-            #     # Load the model
-            #     output_file = 'p_arrival_sample.txt'
-            #     loaded_model = keras.models.load_model(saved_model_path)
-
-            #     # Make predictions on the test dataset
-            #     predictions = loaded_model.predict(self.test_images)
-
-            #     # Save the predictions to a text file
-            #     with open(output_file, 'w') as f:
-            #         for image_name, pred in zip(self.test_images, predictions):
-            #             f.write(f"{image_name}: Predicted p_arrival_sample: {pred[0]}\n")      
-                
-            #     print(f"Predicted p_arrival_sample have been saved to {output_file}")
-
-            # if(target == 's_arrival_sample'):
-            #     # Load the model
-            #     output_file = 's_arrival_sample.txt'
-            #     loaded_model = keras.models.load_model(saved_model_path)
-
-            #     # Make predictions on the test dataset
-            #     predictions = loaded_model.predict(self.test_images)
-
-            #     # Save the predictions to a text file
-            #     with open(output_file, 'w') as f:
-            #         for image_name, pred in zip(self.test_images, predictions):
-            #             f.write(f"{image_name}: Predicted s_arrival_sample: {pred[0]}\n")      
-                
-            #     print(f"Predicted s_arrival_sample have been saved to {output_file}")
-            # #-------------------------------------------------------------------------
-
-    #########################################################################################################################################################################################################
+           
 
     def evaluate_classification_model(self):
             print('Evaluating model on test dataset')
@@ -398,8 +312,6 @@ class SeismicCNN():
             ax.legend(['train','test'])
             plt.savefig('model_accuracy.png')
             plt.show()
-
-    ####################################################################################################################################################################################
     
     def evaluate_regression_model(self):
             print('Evaluating model on test dataset')
@@ -436,28 +348,27 @@ class SeismicCNN():
             plt.savefig('model_loss.png')
             plt.show()
 
-    #####################################################################################################################################################################
 
 # Using the class for a classification CNN
-# model_cnn_c1 = SeismicCNN('classification','trace_category',75001,full_csv,dir) # initialize the class
-# model_cnn_c1.train_test_split(test_size=0.00002667,random_state=44) # train_test_split
-# model_cnn_c1.classification_cnn(50) # use the regression cnn method with 15 epochs with a target variable
+model_cnn_c1 = SeismicCNN('classification','trace_category',75000,full_csv,dir) # initialize the class
+model_cnn_c1.train_test_split(test_size=0.00002667,random_state=44) # train_test_split
+model_cnn_c1.classification_cnn(50) # use the regression cnn method with 15 epochs with a target variable
 # model_cnn_c1.evaluate_classification_model() # evaluate the model
 
 # run the model using CNN regression to predict the earthquake magnitude
-# model_cnn_rm = SeismicCNN('regression','source_magnitude',75001,full_csv,dir); # initialize the class #try putting 10000 instead?
-# model_cnn_rm.train_test_split(test_size=0.00002667,random_state=44) # train_test_split
-# model_cnn_rm.regression_cnn('source_magnitude',20) # use the classification cnn method with 15 epochs
+model_cnn_rm = SeismicCNN('regression','source_magnitude',75000,full_csv,dir); # initialize the class #try putting 10000 instead?
+model_cnn_rm.train_test_split(test_size=0.00002667,random_state=44) # train_test_split
+model_cnn_rm.regression_cnn('source_magnitude',20) # use the classification cnn method with 15 epochs
 #model_cnn_rm.evaluate_regression_model() # evaluate the model
 
 # run the model using CNN regression to predict the p-wave arrival time
-# model_cnn_rp = SeismicCNN('regression','p_arrival_sample',75001,full_csv,dir); # initialize the class
-# model_cnn_rp.train_test_split(test_size=0.00002667,random_state=44) # train_test_split
-# model_cnn_rp.regression_cnn('p_arrival_sample',20) # use the classification cnn method with 15 epochs
+model_cnn_rp = SeismicCNN('regression','p_arrival_sample',75000,full_csv,dir); # initialize the class
+model_cnn_rp.train_test_split(test_size=0.00002667,random_state=44) # train_test_split
+model_cnn_rp.regression_cnn('p_arrival_sample',20) # use the classification cnn method with 15 epochs
 #model_cnn_rp.evaluate_regression_model() # evaluate the model
 
 # # run the model using CNN regression to predict the s-wave arrival time
-model_cnn_rs = SeismicCNN('regression','s_arrival_sample',75001,full_csv,dir); # initialize the class
+model_cnn_rs = SeismicCNN('regression','s_arrival_sample',75000,full_csv,dir); # initialize the class
 model_cnn_rs.train_test_split(test_size=0.00002667,random_state=44) # train_test_split
 model_cnn_rs.regression_cnn('s_arrival_sample',20) # use the classification cnn method with 15 epochs
 #model_cnn_rs.evaluate_regression_model() # evaluate the model
