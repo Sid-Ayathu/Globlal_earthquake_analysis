@@ -5,8 +5,9 @@ import pandas as pd
 import time
 from joblib import Parallel, delayed
 
-##############################################################################################################################################
-data_dir = '/Users/Siddharth/Desktop/IIITB/bashok_srip/STEAD_dataset'
+#########################################    USER INPUT    ##################################################################
+data_dir = 'path_to_stead_dataset'
+####################################################################################################################################
 
 # paths to csv and hdf5 (waveform/signal) files
 noise_csv_path = data_dir+'/chunk1.csv'
@@ -35,9 +36,6 @@ full_csv = pd.concat([earthquakes_1,earthquakes_2,earthquakes_3,earthquakes_4,ea
 
 eqpath = eq5_sig_path # select path to data chunk
 
-img_save_path = '/Users/Siddharth/Desktop/IIITB/bashok_srip/STEAD_dataset/images/testing_spectrograms'
-
-##############################################################################################################################################
 # Function to create images for a specific trace
 def make_image_for_trace(trace_name, eqpath):
     try:
@@ -70,10 +68,10 @@ def make_image_for_trace(trace_name, eqpath):
         
     except Exception as e:
         print(f'Error processing {trace_name}: {e}')
-##############################################################################################################################################
-
+#########################################    USER INPUT    ##################################################################
 # ENTER the trace_name of the earthquake whose seismogram you want to create
 trace_name_to_process = 'PWL.AK_20170225113534_EV'
+##################################################################################################
 
 # Check if the trace name exists in the CSV
 if trace_name_to_process in full_csv['trace_name'].values:
