@@ -1,16 +1,12 @@
 '''
 
-**This script requires that you have downloaded all data chunks from the STanford EArthquake Dataset (STEAD). The data can be downloaded here: https://github.com/smousavi05/STEAD.
+**This script requires that you have downloaded all data chunks from the STanford EArthquake Dataset (STEAD). The data can be downloaded here: https://drive.google.com/file/d/1oiuS7ByCyE2-7rARs6jXWN34Amf-Vrbg/view.
 
 This script reads in the metadata csv files for each data chunk, and allows you to create images from selected waveform signals by pulling the signal data from the hdf5 files. Running the make_images function creates two images:
         1. Waveform plot of signal
         2. Spectrogram plot of signal
         
 This script runs in parallel using joblib. Set n_jobs to choose number of cores (-1 will use all cores, -2 will use all but one core, etc.)
-
-
-Created by Kaelynn Rose
-on 3/31/2021
 
 '''
 
@@ -23,9 +19,9 @@ import timeit
 from joblib import Parallel,delayed
 
 ############################# USER INPUT #############################
-
-data_dir = '/Users/Siddharth/Desktop/IIITB/bashok_srip/STEAD_dataset'
-
+#please enter the path to the stead dataset in your local system
+data_dir = 'path_to_dataset'
+#############################################################################
 
 # paths to csv and hdf5 (waveform/signal) files
 noise_csv_path = data_dir+'/chunk1.csv'
@@ -50,23 +46,18 @@ earthquakes_4 = pd.read_csv(eq4_csv_path,low_memory=False)
 earthquakes_5 = pd.read_csv(eq5_csv_path,low_memory=False)
 noise = pd.read_csv(noise_csv_path,low_memory=False)
 
-
-chunk_name = earthquakes_5 # select chunk of data
+############################# USER INPUT #############################
+chunk_name = earthquakes_5 # select chunk of data from which you want to create the images
 data_start = 0 # select start of data rows you want to pull from that chunk
 data_end = 199000 # select end of data rows you want to pull from that chunk
 data_interval = 1000 # select interval you'd like to pull (smaller interval with more loops may run faster)
 eqpath = eq5_sig_path # select path to data chunk
-
-img_save_path = '/Users/Siddharth/Desktop/IIITB/bashok_srip/STEAD_dataset/images/testing_spectrograms'
-
-
-#######################################################################
-
+no_of_imgs = 12000 #no.of images you want to create from that chunk
+#############################################################################
 
 ## Make images
-
 eqlist = chunk_name['trace_name'].to_list()
-eqlist = np.random.choice(eqlist,8000,replace=False) # turn on to get random sample of signals
+eqlist = np.random.choice(eqlist,no_of_imgs,replace=False) # turn on to get random sample of signals
 
 starts = list(np.linspace(data_start,data_end-data_interval,int((data_end-data_start)/data_interval)))
 ends = list(np.linspace(data_interval,data_end,int((data_end-data_start)/data_interval)))
