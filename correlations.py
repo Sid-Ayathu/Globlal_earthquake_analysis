@@ -9,13 +9,15 @@ from geopy.geocoders import Nominatim
 import re
 from datetime import datetime, timedelta
 
-############################################################################################################
+############################     USER INPUT   ####################################
 
 # path to stead dataset
-data_dir = '/Users/Siddharth/Desktop/IIITB/bashok_srip/STEAD_dataset'
-testing_dir = '/Users/Siddharth/Desktop/IIITB/bashok_srip/STEAD_dataset/images/testing_spectrograms'
+data_dir = 'path_to_stead'
+testing_dir = 'path_to_testing'
 
-############################################################################################################
+test_trace_names = ['KAN16.GS_20150424061553_EV','KAN16.GS_20151111113626_EV']
+#######################################################################################
+
 # paths to csv and hdf5 (waveform/signal) files
 noise_csv_path = data_dir+'/chunk1.csv'
 noise_sig_path = data_dir+'/chunk1.hdf5'
@@ -39,18 +41,10 @@ earthquakes_5 = pd.read_csv(eq5_csv_path,low_memory=False)
 noise = pd.read_csv(noise_csv_path,low_memory=False)
 
 full_csv = pd.concat([earthquakes_1,earthquakes_2,earthquakes_3,earthquakes_4,earthquakes_5,noise])
-############################################################################################################
 
-test_trace_names = ['KAN16.GS_20150424061553_EV','KAN16.GS_20151111113626_EV']
-
-############################################################################################################
 test_images = [
     f'{testing_dir}/{test_trace_names[0]}.png',
     f'{testing_dir}/{test_trace_names[1]}.png'
-
-    #these gave decent predictions:
-    # f'{testing_dir}/imagesB086.PB_20120613131555_EV.png',
-    # f'{testing_dir}/imagesB086.PB_20070926054633_EV.png'
 ]
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -580,37 +574,4 @@ else:
 ################################################################################################################################################################################################################
 
 
-# def magnitude_increase(M_i, M_j, d_ij, t_ij, alpha, L, T, k):
-#     """
-#     Calculate the increase in magnitude of a weaker earthquake influenced by a stronger earthquake.
 
-#     Parameters:
-#     M_i (float): Magnitude of the stronger earthquake.
-#     M_j (float): Magnitude of the weaker earthquake.
-#     d_ij (float): Distance between the epicenters of the two earthquakes.
-#     t_ij (float): Time difference between the two earthquakes.
-#     alpha (float): Scaling factor for magnitude difference.
-#     L (float): Characteristic length scale for distance.
-#     T (float): Characteristic time scale for time difference.
-#     k (float): Constant scaling factor.
-#     alpha,k,L,T are not determined, experiment around with these values.
-
-#     Returns:
-#     float: Increase in magnitude of the weaker earthquake.
-#     """
-#     delta_M = k * np.exp(alpha * (M_i - M_j)) * np.exp(-d_ij / L) * np.exp(-t_ij / T)
-#     return delta_M
-
-# # Example parameters
-# M_i = 7.0
-# M_j = 5.5
-# d_ij = 10  # in km
-# t_ij = 1  # in days
-# alpha = 0.2  
-# L = 50  # in km
-# T = 30  # in days
-# k = 1.0
-
-# # Calculate the increase in magnitude
-# delta_M = magnitude_increase(M_i, M_j, d_ij, t_ij, alpha, L, T, k)
-# print("Increase in magnitude:", delta_M)
